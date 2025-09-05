@@ -5,7 +5,7 @@ class Author(models.Model):
     name = models.CharField(max_length=100)
     
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 class Book(models.Model):
     """Model representing a book with ForeignKey to Author"""
@@ -21,7 +21,7 @@ class Library(models.Model):
     books = models.ManyToManyField(Book, blank=True)
     
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 class Librarian(models.Model):
     """Model representing a librarian with OneToOne relationship to Library"""
