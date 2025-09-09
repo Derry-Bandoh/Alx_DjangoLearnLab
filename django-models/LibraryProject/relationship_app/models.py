@@ -13,7 +13,8 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.title} by {self.author.name}"
+        author_name = self.author.name if self.author and hasattr(self.author, 'name') else 'Unknown Author'
+        return f"{self.title} by {author_name}"
 
 class Library(models.Model):
     """Model representing a library with ManyToMany relationship to Books"""
