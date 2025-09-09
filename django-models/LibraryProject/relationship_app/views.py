@@ -1,7 +1,7 @@
 """Views for the relationship_app."""
 from django.shortcuts import render
 from django.views.generic import ListView
-from .models import Book
+from .models import Book, Library
 
 
 def book_list(request):
@@ -13,7 +13,7 @@ def book_list(request):
 class deatail_view(ListView):
     """Create a class-based view in relationship_app/views.py that displays details 
     for a specific library, listing all books available in that library."""
-    
+    model = Library
     template_name = 'relationship_app/library_detail.html'
    
 
