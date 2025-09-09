@@ -41,6 +41,8 @@ class user_login(LoginView):
 
 class user_logout(LogoutView):
     template_name = 'relationship_app/logout.html'
+    #By default logoutview only accepts get requests
+    #To allow post request, we need to specify the http_method_names attribute
     http_method_names = ['get', 'post']
     # next_page = 'login'
 
