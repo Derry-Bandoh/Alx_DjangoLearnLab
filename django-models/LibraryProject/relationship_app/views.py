@@ -9,6 +9,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 from .models import Book
 from .models import Library
+from django.contrib import messages
+from django.shortcuts import redirect
 from django.contrib.auth import login
 
 
@@ -29,15 +31,26 @@ class libraryDetailView(DetailView):
     model = Library #This the model that this view will use
     template_name = 'relationship_app/library_detail.html'
 
-class user_registration(CreateView):
-    model = User
-    form_class = UserCreationForm
-    template_name = 'relationship_app/register.html'
-    success_url = reverse_lazy('user_login')
+# class user_registration(CreateView):
+#     model = User
+#     form_class = UserCreationForm
+#     template_name = 'relationship_app/register.html'
+#     success_url = reverse_lazy('user_login')
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registration successful!')
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
 
 class user_login(LoginView):
     template_name = 'relationship_app/login.html'
-    redirect_authenticated_user = True
+    # redirect_authenticated_user = True
 
 class user_logout(LogoutView):
     template_name = 'relationship_app/logout.html'
