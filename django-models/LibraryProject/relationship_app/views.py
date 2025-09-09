@@ -9,6 +9,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 from .models import Book
 from .models import Library
+from django.contrib.auth import login
+
 
 
 def list_books(request):
