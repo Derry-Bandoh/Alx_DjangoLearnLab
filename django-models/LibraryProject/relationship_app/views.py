@@ -1,7 +1,8 @@
 """Views for the relationship_app."""
 from django.shortcuts import render
 from django.views.generic import ListView
-from .models import Book, Library
+from .models import Book
+from .models import Library
 
 
 def book_list(request):
