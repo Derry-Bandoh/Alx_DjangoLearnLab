@@ -15,14 +15,23 @@ from .import views
 urlpatterns = [
     path('views/', views.list_books, name= 'list_book'),
     path('detail/', views.libraryDetailView.as_view(), name= 'LibraryDetailView'),
+    path('', views.home, name='home'),
     # path('register/', views.user_registration.as_view(), name= 'register'),
+
+    
     path('register/', views.register, name='register'),
     # path('login/',views.user_login.as_view(template_name = 'relationship_app/login.html'), name= 'login'),
     # path('logout/',views.user_logout.as_view(template_name = 'relationship_app/logout.html'), name = 'logout'),
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-    path('', views.home, name='home'),
+    
+    
     path('admin/', views.admin_view, name='admin_view'),
     path('librarian/', views.librarian_view, name='librarian_view'),
     path('member/', views.member_view, name='member_view'),
+    
+    
+    path('add_book/', views.add_book, name='add_book'),
+    path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),
+    path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),
     ]

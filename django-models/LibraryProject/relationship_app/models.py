@@ -14,6 +14,13 @@ class Book(models.Model):
     """Model representing a book with ForeignKey to Author"""
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+    class Meta:
+        permissions = [
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"), 
+            ("can_delete_book", "Can delete book"),
+        ]
     
     def __str__(self):
         author_name = self.author.name if self.author and hasattr(self.author, 'name') else 'Unknown Author'
