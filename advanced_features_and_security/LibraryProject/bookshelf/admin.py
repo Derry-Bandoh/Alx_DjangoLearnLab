@@ -29,7 +29,7 @@ admin.site.register(Book, BookAdmin)
 
 # Register your models here.
 
-class ModelAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):
     # Fields to display in the list view
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'date_of_birth')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
@@ -54,4 +54,4 @@ class ModelAdmin(UserAdmin):
     ordering = ('username',)
     filter_horizontal = ('groups', 'user_permissions',)
 
-admin.site.register(CustomUser, ModelAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
