@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Librarian Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <h1>Librarian Dashboard</h1>
+    <p>Welcome, {{ user.username }}! You have Librarian access.</p>
+    <div>
+        <h2>Librarian Functions:</h2>
+        <ul>
+            <li>Manage books inventory</li>
+            <li>Check-in/Check-out books</li>
+            <li>View member records</li>
+            <li>Generate library reports</li>
+        </ul>
+    </div>
+    <div>
+        <a href="{% url 'list_book' %}">View Books</a> |
+        <a href="{% url 'home' %}">Home</a> |
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</body>
+
+</html>
