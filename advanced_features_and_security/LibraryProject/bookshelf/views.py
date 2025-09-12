@@ -1,9 +1,12 @@
 from django.shortcuts import render
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import Book
 from relationship_app.views import BookForm
+from django.views.decorators.http import require_http_methods
+from .forms import SearchForm
 
 # Create your views here.
 
@@ -88,3 +91,42 @@ def book_delete_view(request, pk):
         return redirect('book_list')
     
     return render(request, 'books/book_confirm_delete.html', {'book': book})
+
+
+
+@login_required  # Protect view with authentication
+def search_books(request):
+    form = SearchForm(request.GET or None)
+    books = Book.objects.none()
+    
+    if form.is_valid():  # Form validation prevents malicious input
+        query = form.cleaned_data['query']
+        # Safe ORM query - parameterized and sanitized
+        books = Book.objects.filter(
+            Q(title__icontains=query) | Q(author__icontains=query)
+        )
+        return render(request, 'bookshelf/book_list.html', {
+        'books': books,
+        'form': form
+    })
+
+# Safe detail view
+def book_detail(request, book_id):
+    
+    book = get_object_or_404(Book, id=book_id)
+    return render(request, 'bookshelf/book_detail.html', {'book': book})
+
+# Safe form handling
+@login_required
+@require_http_methods(["POST"])  # Only allow POST requests
+def create_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():  # Form validation prevents XSS and other attacks
+            book = form.save(commit=False)
+            book.created_by = request.user  # Set user safely
+            book.save()
+            return redirect('book_list')
+    else:
+        form = BookForm()
+    return render(request, 'bookshelf/book_form.html', {'form': form})

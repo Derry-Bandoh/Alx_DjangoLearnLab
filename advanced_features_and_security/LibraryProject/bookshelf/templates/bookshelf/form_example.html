@@ -1,0 +1,13 @@
+<form method="post">
+    {% csrf_token %} <!-- CSRF protection -->
+
+    {{ form.as_p }} <!-- Use Django forms for built-in validation -->
+
+    <button type="submit">Submit</button>
+</form>
+
+
+<!-- <form method="post" action="{% url 'some_action' %}">
+    {% csrf_token %}
+    
+</form> -->

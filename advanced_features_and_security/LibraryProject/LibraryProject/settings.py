@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'relationship_app.apps.RelationshipAppConfig',
+    'relationship_app.apps.RelationshipAppConfig',
      
 ]
 
@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -127,3 +128,40 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SSL/HTTPS settings (for production)
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP to HTTPS
+SESSION_COOKIE_SECURE = True  # Only send session cookies over HTTPS
+CSRF_COOKIE_SECURE = True  # Only send CSRF cookies over HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # For proxy setups
+
+# Browser security headers
+SECURE_BROWSER_XSS_FILTER = True  # Enable XSS filter in browsers
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME type sniffing
+
+# HSTS settings (for production)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Additional security settings
+SECURE_REFERRER_POLICY = 'same-origin'  # Control referrer information
+
+
+CSP_DEFAULT_SRC = ["'self'"]
+CSP_SCRIPT_SRC = ["'self'"]
+CSP_STYLE_SRC = ["'self'", "'unsafe-inline'"]  # Allow inline styles if needed
+CSP_IMG_SRC = ["'self'", "data:"]
+CSP_FONT_SRC = ["'self'"]
+CSP_OBJECT_SRC = ["'none'"]
+CSP_BASE_URI = ["'none'"]
+CSP_FORM_ACTION = ["'self'"]
+
+
+SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to session cookie
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Session expires when browser closes
+
+# File upload security
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB max upload
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB max file upload
