@@ -6,7 +6,7 @@ from django.contrib import messages
 from .models import Book
 from relationship_app.views import BookForm
 from django.views.decorators.http import require_http_methods
-from .forms import SearchForm
+from .forms import ExampleForm
 
 # Create your views here.
 
