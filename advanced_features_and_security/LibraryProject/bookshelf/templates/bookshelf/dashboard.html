@@ -1,0 +1,124 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Dashboard - Book Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+        <p class="lead">Welcome to your Book Management dashboard, {{ user.username }}!</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Permissions Overview -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-shield-alt"></i> Your Permissions</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        View Books
+                        {% if can_view %}
+                        <span class="badge bg-success">✓ Granted</span>
+                        {% else %}
+                        <span class="badge bg-danger">✗ Denied</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        Add Books
+                        {% if can_add %}
+                        <span class="badge bg-success">✓ Granted</span>
+                        {% else %}
+                        <span class="badge bg-danger">✗ Denied</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        Edit Books
+                        {% if can_edit %}
+                        <span class="badge bg-success">✓ Granted</span>
+                        {% else %}
+                        <span class="badge bg-danger">✗ Denied</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        Delete Books
+                        {% if can_delete %}
+                        <span class="badge bg-success">✓ Granted</span>
+                        {% else %}
+                        <span class="badge bg-danger">✗ Denied</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if can_view %}
+                    <a href="{% url 'book_list' %}" class="btn btn-primary">
+                        <i class="fas fa-list"></i> View All Books
+                    </a>
+                    {% endif %}
+
+                    {% if can_add %}
+                    <a href="{% url 'book_add' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Add New Book
+                    </a>
+                    {% endif %}
+
+                    {% if not can_view %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        You don't have permission to view books. Contact your administrator.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Role Information -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Role Information</h5>
+            </div>
+            <div class="card-body">
+                {% if can_delete %}
+                <div class="alert alert-danger">
+                    <strong><i class="fas fa-crown"></i> Book Admin</strong><br>
+                    You have full access - you can view, add, edit, and delete books.
+                </div>
+                {% elif can_edit %}
+                <div class="alert alert-warning">
+                    <strong><i class="fas fa-edit"></i> Book Editor</strong><br>
+                    You can view, add, and edit books, but cannot delete them.
+                </div>
+                {% elif can_view %}
+                <div class="alert alert-info">
+                    <strong><i class="fas fa-eye"></i> Book Viewer</strong><br>
+                    You can only view books. Contact admin for additional permissions.
+                </div>
+                {% else %}
+                <div class="alert alert-secondary">
+                    <strong><i class="fas fa-ban"></i> No Access</strong><br>
+                    You don't have any book permissions. Contact your administrator.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Delete {{ book.title }} - Book Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h2><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <strong>Warning!</strong> This action cannot be undone.
+                </div>
+
+                <p>Are you sure you want to delete the following book?</p>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5>{{ book.title }}</h5>
+                        <p class="mb-1"><strong>Author:</strong> {{ book.author }}</p>
+                        <p class="mb-0"><strong>Year:</strong> {{ book.publication_year }}</p>
+                    </div>
+                </div>
+
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Yes, Delete Book
+                        </button>
+                        <a href="{% url 'book_detail' book.pk %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

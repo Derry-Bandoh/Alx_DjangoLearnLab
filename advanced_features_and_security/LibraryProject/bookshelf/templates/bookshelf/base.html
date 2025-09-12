@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Book Management{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .permission-badge {
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .book-card {
+            transition: transform 0.2s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .alert {
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'book_list' %}">
+                <i class="fas fa-book"></i> Book Manager
+            </a>
+
+            <div class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <span class="navbar-text me-3">
+                    Welcome, {{ user.username }}
+                    {% if perms.bookshelf.can_view %}<span class="badge bg-success permission-badge">Viewer</span>{%
+                    endif %}
+                    {% if perms.bookshelf.can_add %}<span class="badge bg-info permission-badge">Creator</span>{% endif
+                    %}
+                    {% if perms.bookshelf.can_edit %}<span class="badge bg-warning permission-badge">Editor</span>{%
+                    endif %}
+                    {% if perms.bookshelf.can_delete %}<span class="badge bg-danger permission-badge">Admin</span>{%
+                    endif %}
+                </span>
+                <a class="nav-link" href="{% url 'book_dashboard' %}">Dashboard</a>
+                <a class="nav-link" href="/admin/logout/">Logout</a>
+                {% else %}
+                <a class="nav-link" href="/admin/login/">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Messages -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Page Content -->
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

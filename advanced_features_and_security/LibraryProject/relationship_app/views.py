@@ -11,11 +11,12 @@ from .models import Book
 from .models import Library
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.contrib.auth import login
+from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import user_passes_test 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
+from django.contrib.auth import get_user_model
 
 
 
@@ -54,16 +55,39 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
 
-class user_login(LoginView):
-    template_name = 'relationship_app/login.html'
-    # redirect_authenticated_user = True
+# class user_login(LoginView):
+#     template_name = 'relationship_app/login.html'
+#     redirect_authenticated_user = True
+
+User = get_user_model()
+def login_view(request):
+    if request.method == 'POST':
+        # Get the credentials from the form
+        email = request.POST.get('email')  # or 'username' depending on your form
+        password = request.POST.get('password')
+        
+        # Authenticate the user
+        user = authenticate(request, email=email, password=password)  # or username=email if you use username
+        
+        if user is not None:
+            # Login the user
+            login(request, user)
+            messages.success(request, f'Welcome back, {user.email}!')
+            return redirect('home')  # Replace 'home' with your desired redirect page
+        else:
+            messages.error(request, 'Invalid email or password')
+            return redirect('login')  # Redirect back to login page
+    
+    # If GET request, show the login form
+    return render(request, 'registration_app/login.html')
+
 
 class user_logout(LogoutView):
     template_name = 'relationship_app/logout.html'
     #By default logoutview only accepts get requests
     #To allow post request, we need to specify the http_method_names attribute
     http_method_names = ['get', 'post']
-    # next_page = 'login'
+    next_page = 'login'
 
 # Helper functions to check user roles
 def is_admin(user):
