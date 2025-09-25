@@ -5,10 +5,10 @@ from datetime import date
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'published_date']
+        fields = ['id', 'title', 'author', 'publication_year']
     
     def validate(self, attrs):
-        if attrs['published_date'] > date.today():
+        if attrs['publication_year'] > date.today():
             raise serializers.ValidationError("Published date cannot be in the future.")
         return attrs
         
