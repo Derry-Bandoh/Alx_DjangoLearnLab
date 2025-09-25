@@ -3,10 +3,9 @@ from .models import Book, Author
 from datetime import date
 
 class BookSerializer(serializers.ModelSerializer):
-    author = BookSerializer( many=True, read_only=True)
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'publication_year','author']
+        fields = ['id', 'title', 'author', 'publication_year']
     
     def validate(self, attrs):
         if attrs['publication_year'] > date.today():
@@ -15,7 +14,7 @@ class BookSerializer(serializers.ModelSerializer):
         
 
 class AuthorSerializer(serializers.ModelSerializer):
-    author = BookSerializer( many=True, read_only=True)
+    books = BookSerializer( many=True,read_only=True)
     class Meta:
         model = Author
-        fields = ['id', 'name', 'author']
+        fields = ['id', 'name', 'books']
