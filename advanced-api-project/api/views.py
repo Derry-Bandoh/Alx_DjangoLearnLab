@@ -17,7 +17,7 @@ from .serializers import BookSerializer
 from .models import Book
 
 
-class BookListView(ListView, filters.OrderingFilter):
+class BookListView(ListView, filters.OrderingFilter, filters.SearchFilter):
     model = Book
     template_name = 'book_list.html'
     filterset_fields = ['title','author','publication_year']
