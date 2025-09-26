@@ -9,6 +9,7 @@ class BookViewTests(TestCase,APITestCase):
     def test_book_list_status_code(self):
         # Simulate a GET request to the book-list URL
         response = self.client.get('/api/books/') 
+        response = self.client.login('/api/login/')
         
         # Assertions
         self.assertEqual(response.status_code, 200) # Check for a successful response
