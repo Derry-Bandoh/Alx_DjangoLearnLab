@@ -18,6 +18,9 @@ from .models import Book
 class BookListView(ListView):
     model = Book
     template_name = 'book_list.html'
+    filterset_fields = ['title','author','publication_year']
+    search_fields = ['title','author','publication_year']
+    ordering_fields = ['title','author','publication_year']
 
 class BookDetailView(DetailView):
     model = Book
@@ -52,6 +55,9 @@ class BookListCreateAPIView(ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly,IsAuthenticated]
+    filterset_fields = ['title','author','publication_year']
+    search_fields = ['title','author','publication_year']
+    ordering_fields = ['title','author','publication_year']
 
 class BookRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
