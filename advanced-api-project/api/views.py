@@ -10,6 +10,8 @@ from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from django_filters import rest_framework
+from rest_framework import generics
 from django.urls import reverse_lazy
 from .serializers import BookSerializer
 from .models import Book
