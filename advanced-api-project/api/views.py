@@ -5,7 +5,7 @@ from django.views.generic import (
     DeleteView,
     DetailView,
 )
-from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -27,7 +27,7 @@ class BookCreateView(CreateView):
     model = Book
     template_name = 'book_form.html'
     fields = ['title', 'author', 'publication_year']
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthenticated]
 
     success_url = reverse_lazy('books')
 
@@ -35,7 +35,7 @@ class BookUpdateView(UpdateView):
     model = Book
     template_name = 'book_form.html'
     fields = ['title', 'author', 'publication_year']
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly,IsAuthenticated]
 
     success_url = reverse_lazy('books')
 
@@ -43,7 +43,7 @@ class BookUpdateView(UpdateView):
 class BookDeleteView(DeleteView):
     model = Book
     template_name = 'book_confirm_delete.html'
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly,IsAuthenticated]
 
     success_url = reverse_lazy('books')
 
@@ -51,10 +51,10 @@ class BookDeleteView(DeleteView):
 class BookListCreateAPIView(ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly,IsAuthenticated]
 
 class BookRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly,IsAuthenticated]
 
