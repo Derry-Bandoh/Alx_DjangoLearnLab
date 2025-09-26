@@ -1,10 +1,10 @@
-from django.test import TestCase
-from rest_framework.test  import APIRequestFactory
+from django.test import 
+from rest_framework.test  import APITestCase
 from .models import Book
 
 class BookTestCase(TestCase):
 
-class BookViewTests(TestCase):
+class BookViewTests(TestCase,APITestCase):
     def test_book_list_status_code(self):
         # Simulate a GET request to the book-list URL
         response = self.client.get('/api/books/') 
@@ -14,7 +14,7 @@ class BookViewTests(TestCase):
         self.assertContains(response, 'Test Title') # Check if the content is in the response
 
 
-class BookModelTests(TestCase):
+class BookModelTests(TestCase, APITestCase):
     def setUp(self):
         # Create an object available to all test methods
         self.book = Book.objects.create(title='Test Title', author='Test Author')
