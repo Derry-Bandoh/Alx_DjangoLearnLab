@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, Post
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -21,3 +21,8 @@ class CustomUserUpdateForm(UserChangeForm):
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4}),
         }
+    
+class PostUpdateForm(forms.ModelForm):
+    class meta:
+        model = Post
+        fields = ['title', 'content']
