@@ -15,6 +15,7 @@ from .forms import (
     CustomUserCreationForm, 
     CustomUserUpdateForm,
     PostUpdateForm,
+    PostCreateForm,
     )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin  
 from .models import Post
@@ -75,6 +76,18 @@ class PostDeleteView(DeleteView, LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         obj = self.get_object()
         return obj.author == self.request.user 
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostCreateForm 
+    
+    template_name = 'blog/post_create.html'
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.pk}) 
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user 
+        return super().form_valid(form)
 
 @login_required
 def save(request):

@@ -26,3 +26,10 @@ class PostUpdateForm(forms.ModelForm):
     class meta:
         model = Post
         fields = ['title', 'content']
+
+class PostCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        
+        fields = ['title', 'content'] 
