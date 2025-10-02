@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth import login, logout
-from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
+from .forms import CustomUserCreationForm , CustomUserUpdateForm
 
 
 
@@ -30,4 +31,18 @@ class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'signup.html'
     success_url = reverse_lazy('login')
+
+@login_required
+def save(request):
+    if request.method == 'POST':
+        form  = CustomUserUpdateForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid(): 
+            form.save()
+            return redirect(reverse('profile'))
+    else:
+        form = CustomUserUpdateForm(instance=request.user)
+    context = {
+        'form': form
+    }
+    return render(request, 'profile.html', context)
 
