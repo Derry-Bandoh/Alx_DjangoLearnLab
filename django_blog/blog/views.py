@@ -100,8 +100,8 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = 'blog/comment_delete.html'
 
     def get_success_url(self):
-        post_id = self.object.post.pk
-        return reverse('post_detail', kwargs={'pk': post_id})
+        post_pk = self.object.post.pk
+        return reverse('post_detail', kwargs={'pk': post_pk})
     
     def test_func(self):
         obj = self.get_object()
@@ -122,8 +122,8 @@ def save(request):
     return render(request, 'blog/profile.html', context)
 
 @login_required
-def add_comment(request, post_id):
-    post = get_object_or_404(Post, pk = post_id)
+def add_comment(request, pk):
+    post = get_object_or_404(Post, pk = pk)
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
