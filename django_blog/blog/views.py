@@ -11,17 +11,18 @@ from django.views.generic import (
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from taggit.models import Tag 
+from django.db.models import Q
 from .forms import (
     CustomUserCreationForm, 
     CustomUserUpdateForm,
-    PostUpdateForm,
-    PostCreateForm,
+    # PostUpdateForm,
+    # PostCreateForm,
+    PostForm,
     CommentForm,
     )
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin  
 from .models import Post , Comment
-from django.contrib.auth.mixins import LoginRequiredMixin
-
 
 
 def home(request):
@@ -61,7 +62,8 @@ class PostDetailView(DetailView):
 
 class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
     model = Post
-    form_class = PostUpdateForm
+    # form_class = PostUpdateForm
+    form_class = PostForm
     template_name = 'blog/post_update.html'
     success_url = reverse_lazy('post_list')
 
@@ -80,7 +82,8 @@ class PostDeleteView(DeleteView, LoginRequiredMixin, UserPassesTestMixin):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    form_class = PostCreateForm 
+    # form_class = PostCreateForm 
+    form_class = PostForm
     
     template_name = 'blog/post_create.html'
     def get_success_url(self):
@@ -90,9 +93,9 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user 
         return super().form_valid(form)
 
-class CommentCreateView(LoginRequiredMixin, CreateView):
-    model = Comment
-    form_class = 
+# class CommentCreateView(LoginRequiredMixin, CreateView):
+#     model = Comment
+#     form_class = 
 
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -107,6 +110,64 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         obj = self.get_object()
         return obj.author == self.request.user
 
+
+class SearchResultsView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'search_results'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        
+        if query:
+            search_query = Q(title__icontains=query) | Q(content__icontains=query)
+            
+            tag_query = Q(tags__name__icontains=query)
+            
+            queryset = Post.objects.filter(search_query | tag_query).distinct()
+        else:
+            queryset = Post.objects.none()
+            
+        return queryset.order_by('-published_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '') 
+        return context
+    
+
+class TaggedPostListView(ListView):
+    model = Post
+    template_name = 'blog/tag_posts.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        self.tag_slug = self.kwargs['tag_slug']
+        return Post.objects.filter(tags__slug=self.tag_slug).order_by('-published_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag_slug.replace('-', ' ').title() # Format for display
+        return context
+
+class CommentUpdateView(UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_update.html' 
+
+    
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        
+        return reverse('post_detail', kwargs={'pk': self.object.post.pk})
+
+
+
+
+##FUNCTION-BASED VIEWS 
 @login_required
 def save(request):
     if request.method == 'POST':
@@ -135,18 +196,5 @@ def add_comment(request, pk):
             return redirect(reverse('post_detail', kwargs={'pk': post.pk}))
     return redirect(reverse('post_detail', kwargs={'pk': post.pk}))
 
-class CommentUpdateView(UserPassesTestMixin, UpdateView):
-    model = Comment
-    form_class = CommentForm
-    template_name = 'blog/comment_update.html' 
-
-    
-    def test_func(self):
-        comment = self.get_object()
-        return comment.author == self.request.user
-
-    def get_success_url(self):
-        
-        return reverse('post_detail', kwargs={'pk': self.object.post.pk})
 
 

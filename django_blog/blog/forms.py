@@ -26,18 +26,22 @@ class CustomUserUpdateForm(UserChangeForm):
             'bio': forms.Textarea(attrs={'rows': 4}),
         }
     
-class PostUpdateForm(forms.ModelForm):
-    class meta:
-        model = Post
-        fields = ['title', 'content']
+# class PostUpdateForm(forms.ModelForm):
+#     class meta:
+#         model = Post
+#         fields = ['title', 'content']
 
-class PostCreateForm(forms.ModelForm):
+# class PostCreateForm(forms.ModelForm):
 
+#     class Meta:
+#         model = Post
+        
+#         fields = ['title', 'content'] 
+
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        
-        fields = ['title', 'content'] 
-
+        fields = ['title', 'content', 'tags']
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -54,8 +58,8 @@ class CommentForm(forms.ModelForm):
             raise forms.ValidationError("Comment must be at least 5 characters long.")
         return content
 
-class CommentCreateForm(forms.ModelForm):
-    class Meta :
-        model = Comment
-        fields = 
+# class CommentCreateForm(forms.ModelForm):
+#     class Meta :
+#         model = Comment
+#         fields = 
 
