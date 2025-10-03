@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (
     CreateView,
@@ -16,9 +16,10 @@ from .forms import (
     CustomUserUpdateForm,
     PostUpdateForm,
     PostCreateForm,
+    CommentForm,
     )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin  
-from .models import Post
+from .models import Post , Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -102,4 +103,33 @@ def save(request):
         'form': form
     }
     return render(request, 'blog/profile.html', context)
+
+@login_required
+def add_comment(request,pk):
+    post = get_object_or_404(Post, pk = pk)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post 
+            comment.author = request.user
+            comment.save()
+            return redirect(reverse('post-detail', kwargs={'pk': post.pk}))
+    return redirect(reverse('post-detail', kwargs={'pk': post.pk}))
+
+class CommentUpdateView(UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_update.html' 
+
+    
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        
+        return reverse('post-detail', kwargs={'pk': self.object.post.pk})
+
 
