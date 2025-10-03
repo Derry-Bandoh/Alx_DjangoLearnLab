@@ -43,7 +43,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
-
+        TagWidget()
         widgets = {
             # Map the 'tags' field to the TagWidget
             'tags': TagWidget(attrs={'placeholder': 'Enter tags separated by commas'}) 
