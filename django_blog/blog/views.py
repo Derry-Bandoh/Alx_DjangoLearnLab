@@ -105,8 +105,8 @@ def save(request):
     return render(request, 'blog/profile.html', context)
 
 @login_required
-def add_comment(request,pk):
-    post = get_object_or_404(Post, pk = pk)
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, pk = post_id)
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
