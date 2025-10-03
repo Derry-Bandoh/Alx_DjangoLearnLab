@@ -136,7 +136,7 @@ class SearchResultsView(ListView):
         return context
     
 
-class TaggedPostListView(ListView):
+class PostByTagListView(ListView):
     model = Post
     template_name = 'blog/tag_posts.html'
     context_object_name = 'posts'
