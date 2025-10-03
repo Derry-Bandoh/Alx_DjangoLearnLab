@@ -63,7 +63,7 @@ class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
     model = Post
     form_class = PostUpdateForm
     template_name = 'blog/post_update.html'
-    success_url = reverse_lazy('post-list')
+    success_url = reverse_lazy('post_list')
 
     def test_func(self):
         obj = self.get_object()
@@ -90,6 +90,23 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user 
         return super().form_valid(form)
 
+class CreateCommentView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = 
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_delete.html'
+
+    def get_success_url(self):
+        post_id = self.object.post.pk
+        return reverse('post_detail', kwargs={'pk': post_id})
+    
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
+
 @login_required
 def save(request):
     if request.method == 'POST':
@@ -115,8 +132,8 @@ def add_comment(request, post_id):
             comment.post = post 
             comment.author = request.user
             comment.save()
-            return redirect(reverse('post-detail', kwargs={'pk': post.pk}))
-    return redirect(reverse('post-detail', kwargs={'pk': post.pk}))
+            return redirect(reverse('post_detail', kwargs={'pk': post.pk}))
+    return redirect(reverse('post_detail', kwargs={'pk': post.pk}))
 
 class CommentUpdateView(UserPassesTestMixin, UpdateView):
     model = Comment
@@ -130,6 +147,6 @@ class CommentUpdateView(UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         
-        return reverse('post-detail', kwargs={'pk': self.object.post.pk})
+        return reverse('post_detail', kwargs={'pk': self.object.post.pk})
 
 

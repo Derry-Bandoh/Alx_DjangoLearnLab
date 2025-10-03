@@ -54,4 +54,8 @@ class CommentForm(forms.ModelForm):
             raise forms.ValidationError("Comment must be at least 5 characters long.")
         return content
 
+class CommentCreateForm(forms.ModelForm):
+    class Meta :
+        model = Comment
+        fields = 
 
